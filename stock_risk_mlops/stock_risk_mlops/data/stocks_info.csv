@@ -1,0 +1,11 @@
+ticker,name,sector
+AAPL,Apple,Technology
+MSFT,Microsoft,Technology
+GOOGL,Alphabet,Technology
+AMZN,Amazon,Consumer
+TSLA,Tesla,Automotive
+NVDA,NVIDIA,Technology
+KO,Coca-Cola,Consumer Staples
+JNJ,Johnson & Johnson,Healthcare
+JPM,JPMorgan Chase,Finance
+XOM,Exxon Mobil,Energy

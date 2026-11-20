@@ -1,0 +1,12 @@
+{
+  "best_model": "Random Forest",
+  "accuracy": 0.5299270072992701,
+  "f1": 0.453519768077411,
+  "train_rows": 5350,
+  "validation_scores": {
+    "Decision Tree": 0.4505470661523674,
+    "Random Forest": 0.453519768077411,
+    "SVM": 0.4450590547050514
+  },
+  "trained_at": "2026-11-03 17:47"
+}

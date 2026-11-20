@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f5f7fb">
+  <title>Stock Risk | Portfolio Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="/">
+        <span class="brand-mark">S</span>
+        <span>Stock<span class="brand-light">Risk</span></span>
+      </a>
+      <div class="topbar-right">
+        <span class="system-status"><span class="status-dot"></span> System online</span>
+        <span id="model-badge" class="model-badge">Loading model...</span>
+      </div>
+    </header>
+
+    <main>
+      <section class="page-heading">
+        <div>
+          <p class="eyebrow">PORTFOLIO OVERVIEW</p>
+          <h1>Risk monitor</h1>
+          <p class="page-subtitle">Understand the risk behind your stock portfolio.</p>
+        </div>
+        <div class="date-label" id="today-label"></div>
+      </section>
+
+      <section class="summary-grid" aria-label="Portfolio summary">
+        <article class="summary-card">
+          <div class="summary-top"><span>Portfolio value</span><span class="summary-icon">$</span></div>
+          <h2 id="total">—</h2>
+          <p class="summary-note">Based on latest available prices</p>
+        </article>
+        <article class="summary-card">
+          <div class="summary-top"><span>Overall risk</span><span class="summary-icon">◎</span></div>
+          <h2 id="level">—</h2>
+          <p class="summary-note">Weighted across your holdings</p>
+        </article>
+        <article class="summary-card">
+          <div class="summary-top"><span>Active alerts</span><span class="summary-icon">!</span></div>
+          <h2 id="alert-count">—</h2>
+          <p class="summary-note">Risk and concentration warnings</p>
+        </article>
+      </section>
+
+      <section class="workspace">
+        <aside class="panel portfolio-panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">YOUR HOLDINGS</p>
+              <h2>Build portfolio</h2>
+            </div>
+            <span class="panel-number">01</span>
+          </div>
+          <label for="stock-select">Choose a stock</label>
+          <select id="stock-select"><option>Loading stocks...</option></select>
+          <label for="shares">Number of shares</label>
+          <input id="shares" type="number" min="1" step="1" value="10">
+          <div class="button-row">
+            <button class="button button-primary" type="button" onclick="addStock()">Add stock <span>+</span></button>
+            <button class="button button-secondary" type="button" onclick="loadSample()">Load sample</button>
+          </div>
+          <div class="holdings-heading">
+            <span>Selected holdings</span>
+            <span id="holding-count" class="count-pill">0</span>
+          </div>
+          <ul id="holdings" class="holdings-list">
+            <li class="holdings-empty">Your selected stocks will appear here.</li>
+          </ul>
+          <button class="button button-analyze" type="button" onclick="analyze()">Analyze portfolio <span>→</span></button>
+          <p class="helper-text">Predictions use the latest available price history.</p>
+        </aside>
+
+        <div class="main-column">
+          <section id="alerts" class="alerts-area" aria-live="polite"></section>
+
+          <section class="panel table-panel">
+            <div class="panel-heading">
+              <div>
+                <p class="eyebrow">PORTFOLIO BREAKDOWN</p>
+                <h2>Risk by holding</h2>
+                <p class="panel-description">Select a stock to view its recent price history.</p>
+              </div>
+              <span class="panel-number">02</span>
+            </div>
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr><th>Stock</th><th>Market value</th><th>Weight</th><th>Risk level</th><th>Confidence</th></tr>
+                </thead>
+                <tbody id="results">
+                  <tr><td colspan="5" class="table-empty">Add stocks to your portfolio, then select Analyze portfolio.</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel chart-panel">
+            <div class="panel-heading chart-heading">
+              <div>
+                <p class="eyebrow">PRICE HISTORY</p>
+                <h2 id="chart-title">Stock performance</h2>
+                <p class="panel-description">Closing price over the last 120 trading days.</p>
+              </div>
+              <span class="chart-period">120D</span>
+            </div>
+            <div class="chart-wrap"><canvas id="chart"></canvas></div>
+          </section>
+        </div>
+      </section>
+
+      <section class="lower-grid">
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">MODEL PERFORMANCE</p>
+              <h2>Model report</h2>
+            </div>
+            <span class="panel-number">03</span>
+          </div>
+          <div id="model-info" class="model-metrics">
+            <p class="muted-message">Loading model information...</p>
+          </div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">PREDICTION HISTORY</p>
+              <h2>Recent activity</h2>
+            </div>
+            <span class="panel-number">04</span>
+          </div>
+          <div class="table-wrap">
+            <table class="activity-table">
+              <thead><tr><th>Time</th><th>Stock</th><th>Risk</th><th>Confidence</th></tr></thead>
+              <tbody id="logs"><tr><td colspan="4" class="table-empty">No predictions recorded yet.</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </section>
+      <footer class="footer">
+        <span>StockRisk · Machine learning portfolio monitor</span>
+        <span>For educational purposes only. Not investment advice.</span>
+      </footer>
+    </main>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
